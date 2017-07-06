@@ -2,6 +2,7 @@ package com.gaurav.android.newsfolo;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -18,7 +19,7 @@ import android.view.MenuItem;
 import static com.gaurav.android.newsfolo.R.menu.drawer;
 
 public class DrawerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, EntertainmentFragment.OnFragmentInteractionListener, EducationFragment.OnFragmentInteractionListener,SportsFragment.OnFragmentInteractionListener, PoliticsFragment.OnFragmentInteractionListener{
     private ActionBarDrawerToggle toggle;
 
     @Override
@@ -118,5 +119,10 @@ public class DrawerActivity extends AppCompatActivity
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         toggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
