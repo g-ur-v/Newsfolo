@@ -20,7 +20,5 @@
     <string name="category_sports">Sports</string>
     <string name="category_education">Education</string>
     <string name="category_politics">Politics</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment">Hello this is a blank fragment \n and a multi line statement to check that all thewords \n are visible\n or not.</string>
 </resources>

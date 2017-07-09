@@ -3,9 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.gaurav.android.newsfolo.EntertainmentFragment"
-    android:paddingTop="90dp">
-
-    <!-- TODO: Update blank fragment layout -->
+    android:layout_marginTop="?android:attr/actionBarSize"
+    android:paddingTop="48dp">
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
