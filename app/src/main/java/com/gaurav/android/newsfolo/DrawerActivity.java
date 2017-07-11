@@ -123,7 +123,6 @@ public class DrawerActivity extends AppCompatActivity
         }
 
         item.setChecked(true);
-        setTitle(item.getTitle());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
