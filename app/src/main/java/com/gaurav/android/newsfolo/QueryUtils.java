@@ -1,28 +1,133 @@
 package com.gaurav.android.newsfolo;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.text.TextUtils;
+import android.util.Log;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public /*final*/ class QueryUtils extends AppCompatActivity {
-    String url = "https://www.newsfolo.com/wp-json/wp/v2/posts";
+public final class QueryUtils extends AppCompatActivity {
+
+    private static final String LOG_TAG = QueryUtils.class.getSimpleName();
+
+    private QueryUtils(){
+    }
+
+    public static List<Headline> fetchHeadlines(String requesrUrl){
+        URL url = createUrl(requesrUrl);
+        String jsonResponse = null;
+
+        try{
+            jsonResponse = makeHttpRequest(url);
+        } catch(IOException e){
+            Log.e(LOG_TAG, "Problem making the HTTP request.", e);
+        }
+        List<Headline> headlines = extractFratureFromJson(jsonResponse);
+        return headlines;
+    }
+
+    private static URL createUrl(String stringUrl){
+        URL url = null;
+        try{
+            url = new URL(stringUrl);
+        } catch (MalformedURLException e){
+            Log.e(LOG_TAG, "Problem building the URL", e);
+        }
+        return url;
+    }
+
+    private static String makeHttpRequest(URL url) throws IOException{
+        String jsonResponse = "";
+        if (url == null){
+            return jsonResponse;
+        }
+        HttpURLConnection urlConnection = null;
+        InputStream inputStream = null;
+        try{
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setReadTimeout(10000);
+            urlConnection.setConnectTimeout(15000);
+            urlConnection.setRequestMethod("GET");
+            urlConnection.connect();
+
+            if(urlConnection.getResponseCode()==200){
+                inputStream = urlConnection.getInputStream();
+                jsonResponse = readFromStream(inputStream);
+            }else{
+                Log.e(LOG_TAG, "Error Response code: "+ urlConnection.getResponseCode());
+            }
+        }catch(IOException e){
+            Log.e(LOG_TAG, "Problem retrieving the headlines JSON results.", e);
+        } finally {
+            if (urlConnection != null){
+                urlConnection.disconnect();
+            }
+            if (inputStream != null){
+                inputStream.close();
+            }
+        }
+        return jsonResponse;
+    }
+
+    private static String readFromStream(InputStream inputStream) throws IOException{
+        StringBuilder output = new StringBuilder();
+        if (inputStream != null){
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
+            BufferedReader reader = new BufferedReader(inputStreamReader);
+            String line = reader.readLine();
+            while (line != null){
+                output.append(line);
+                line = reader.readLine();
+            }
+        }
+        return output.toString();
+    }
+    private static List<Headline> extractFratureFromJson(String headlinesJSON){
+        if (TextUtils.isEmpty(headlinesJSON)){
+            return null;
+        }
+        List<Headline> headlines = new ArrayList<>();
+        try {
+            JSONObject baseJsonResponse = new JSONObject(headlinesJSON);
+            JSONArray headlinesArray = baseJsonResponse.getJSONArray("");
+
+            for (int i = 0; i < baseJsonResponse.length(); i++) {
+                JSONObject currentHeadline = headlinesArray.getJSONObject(i);
+
+                JSONObject titleObj = currentHeadline.getJSONObject("title");
+                String title = titleObj.getString("rendered");
+
+                JSONObject idObj = currentHeadline.getJSONObject("id");
+                int id = idObj.getInt("id");
+
+                JSONObject linkObj = currentHeadline.getJSONObject("link");
+                String link = linkObj.getString("link");
+
+                JSONObject authorNameObj = currentHeadline.getJSONObject("link");
+                String authorName= authorNameObj.getString("author");
+
+                Headline headline = new Headline(id, title, link, authorName);
+                headlines.add(headline);
+            }
+        }catch(Exception e){
+            Log.e("QueryUtils", "Problem parsing the headlines JSON results", e);
+        }
+        return headlines;
+    }
+}
+/*String url = "https://www.newsfolo.com/wp-json/wp/v2/posts";
     ListView postList;
     Map<String,Object> mapPost;
     Map<String,Object> mapTitle;
@@ -80,94 +185,4 @@ public /*final*/ class QueryUtils extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-    /*
-    private QueryUtils(){
-    }
-    public static List<Headlines> fetchHeadlines(String requesrUrl){
-        URL url = createUrl(requesrUrl);
-        String jsonResponse = null;
-        try{
-            jsonResponse = makeHttpRequest(url);
-        } catch(IOException e){
-            Log.e(LOG_TAG, "Problem making the HTTP request.", e);
-        }
-        List<Headlines> headlines = extractFratureFromJson(jsonResponse);
-        return headlines;
-    }
-    private static URL createUrl(String stringUrl){
-        URL url = null;
-        try{
-            url = new URL(stringUrl);
-        } catch (MalformedURLException e){
-            Log.e(LOG_TAG, "Problem building the URL", e);
-        }
-        return url;
-    }
-    private static String makeHttpRequest(URL url) throws IOException{
-        String jsonResponse = "";
-        if (url == null){
-            return jsonResponse;
-        }
-        HttpURLConnection urlConnection = null;
-        InputStream inputStream = null;
-        try{
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setReadTimeout(10000);
-            urlConnection.setConnectTimeout(15000);
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            if(urlConnection.getResponseCode()==200){
-                inputStream = urlConnection.getInputStream();
-                jsonResponse = readFromStream(inputStream);
-            }else{
-                Log.e(LOG_TAG, "Error Response code: "+ urlConnection.getResponseCode());
-            }
-        }catch(IOException e){
-            Log.e(LOG_TAG, "Problem retrieving the headlines JSON results.", e);
-        } finally {
-            if (urlConnection != null){
-                urlConnection.disconnect();
-            }
-            if (inputStream != null){
-                inputStream.close();
-            }
-        }
-        return jsonResponse;
-    }
-    private static String readFromStream(InputStream inputStream) throws IOException{
-        StringBuilder output = new StringBuilder();
-        if (inputStream != null){
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
-            BufferedReader reader = new BufferedReader(inputStreamReader);
-            String line = reader.readLine();
-            while (line != null){
-                output.append(line);
-                line = reader.readLine();
-            }
-        }
-        return output.toString();
-    }
-    private static List<Headlines> extractFratureFromJson(String headlinesJSON){
-        if (TextUtils.isEmpty(headlinesJSON)){
-            return null;
-        }
-        List<Headlines> headlines = new ArrayList<>();
-        try{
-            JSONObject baseJsonResponse = new JSONObject(headlinesJSON);
-            JSONArray headlinesArray = baseJsonResponse.getJSONArray("title");
-            for(int i=0; i<headlinesArray.length();i++){
-                Map<String, Object> mapPost = (Map<String, Object>) headlines.get(i);
-                Map<String, Object> mapTitle = (Map<String, Object>) mapPost.get("title");
-                String postTitle[] = new String[headlines.size()];
-                postTitle[i] = (String) mapTitle.get("rendered");
-            }
-        }catch(Exception e){
-            Log.e("QueryUtils", "Problem parsing the headlines JSON results", e);
-        }
-        return headlines;
     }*/
-    /*private static final String LOG_TAG = QueryUtils.class.getSimpleName();*/
-
-}

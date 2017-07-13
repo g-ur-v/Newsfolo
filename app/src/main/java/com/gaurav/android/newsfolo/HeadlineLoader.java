@@ -31,7 +31,7 @@ public class HeadlineLoader extends AsyncTaskLoader<List<Headline>>{
         if (mUrl == null){
             return null;
         }
-        List<Headline> headlines = QueryUtils.fetchEarthquakeData(mUrl);
+        List<Headline> headlines = QueryUtils.fetchHeadlines(mUrl);
         return headlines;
     }
 }
