@@ -1,24 +1,87 @@
 package com.gaurav.android.newsfolo;
 
-import android.text.TextUtils;
-import android.util.Log;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+
 import java.util.List;
+import java.util.Map;
 
-public final class QueryUtils {
-    private static final String LOG_TAG = QueryUtils.class.getSimpleName();
+public /*final*/ class QueryUtils extends AppCompatActivity {
+    String url = "https://www.newsfolo.com/wp-json/wp/v2/posts";
+    ListView postList;
+    Map<String,Object> mapPost;
+    Map<String,Object> mapTitle;
+    int postID;
+    String postTitle[];
+    List<Object> list;
+    Gson gson;
+    ProgressDialog progressDialog;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_home);
+
+        postList = (ListView)findViewById(R.id.postList);
+        progressDialog = new ProgressDialog(QueryUtils.this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
+
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
+                gson = new Gson();
+                list = (List) gson.fromJson(s, List.class);
+                postTitle = new String[list.size()];
+
+                for(int i=0;i<list.size();++i){
+                    mapPost = (Map<String,Object>)list.get(i);
+                    mapTitle = (Map<String, Object>) mapPost.get("title");
+                    postTitle[i] = (String) mapTitle.get("rendered");
+                }
+
+                postList.setAdapter(new ArrayAdapter(QueryUtils.this,R.layout.home_list_item,postTitle));
+                progressDialog.dismiss();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Toast.makeText(QueryUtils.this, "Some error occurred", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        RequestQueue rQueue = Volley.newRequestQueue(QueryUtils.this);
+        rQueue.add(request);
+
+        postList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mapPost = (Map<String,Object>)list.get(position);
+                postID = ((Double)mapPost.get("id")).intValue();
+
+                Intent intent = new Intent(getApplicationContext(),HomeFragment.class);
+                intent.putExtra("id", ""+postID);
+                startActivity(intent);
+            }
+        });
+    }
+    /*
     private QueryUtils(){
     }
     public static List<Headlines> fetchHeadlines(String requesrUrl){
@@ -86,18 +149,25 @@ public final class QueryUtils {
         }
         return output.toString();
     }
-}private static List<Headlines> extractFratureFromJson(String headlinesJSON){
-    if (TextUtils.isEmpty(headlinesJSON)){
-        return null;
-    }
-    List<Headlines> headlines = new ArrayList<>();
-    try{
-        JSONObject baseJsonResponse = new JSONObject(headlinesJSON);
-        JSONArray headlinesArray = baseJsonResponse.getJSONArray("");
-        for(int i=0; i<headlinesArray.length();i++){
-            JSONObject
+    private static List<Headlines> extractFratureFromJson(String headlinesJSON){
+        if (TextUtils.isEmpty(headlinesJSON)){
+            return null;
         }
-    }catch(Exception e){
+        List<Headlines> headlines = new ArrayList<>();
+        try{
+            JSONObject baseJsonResponse = new JSONObject(headlinesJSON);
+            JSONArray headlinesArray = baseJsonResponse.getJSONArray("title");
+            for(int i=0; i<headlinesArray.length();i++){
+                Map<String, Object> mapPost = (Map<String, Object>) headlines.get(i);
+                Map<String, Object> mapTitle = (Map<String, Object>) mapPost.get("title");
+                String postTitle[] = new String[headlines.size()];
+                postTitle[i] = (String) mapTitle.get("rendered");
+            }
+        }catch(Exception e){
+            Log.e("QueryUtils", "Problem parsing the headlines JSON results", e);
+        }
+        return headlines;
+    }*/
+    /*private static final String LOG_TAG = QueryUtils.class.getSimpleName();*/
 
-    }
 }
