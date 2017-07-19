@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/splash_background_image">
+    android:background="#0A263E">
     <ImageView
         android:id="@+id/splashscreen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/splash_background_image"
+        android:src="@drawable/logo"
         android:layout_centerInParent = "true"
         android:layout_gravity="center"
-        android:scaleType="fitXY"/>
+        android:scaleType="centerInside"/>
 </RelativeLayout>
