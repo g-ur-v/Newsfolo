@@ -25,8 +25,8 @@ public final class QueryUtils extends AppCompatActivity {
     private QueryUtils(){
     }
 
-    public static List<Headline> fetchHeadlines(String requesrUrl){
-        URL url = createUrl(requesrUrl);
+    public static List<Headline> fetchHeadlines(String requestUrl){
+        URL url = createUrl(requestUrl);
         String jsonResponse = null;
 
         try{
@@ -34,8 +34,7 @@ public final class QueryUtils extends AppCompatActivity {
         } catch(IOException e){
             Log.e(LOG_TAG, "Problem making the HTTP request.", e);
         }
-        List<Headline> headlines = extractFratureFromJson(jsonResponse);
-        return headlines;
+        return extractFeatureFromJson(jsonResponse);
     }
 
     private static URL createUrl(String stringUrl){
@@ -94,7 +93,7 @@ public final class QueryUtils extends AppCompatActivity {
         }
         return output.toString();
     }
-    private static List<Headline> extractFratureFromJson(String headlinesJSON){
+    private static List<Headline> extractFeatureFromJson(String headlinesJSON){
         if (TextUtils.isEmpty(headlinesJSON)){
             return null;
         }
@@ -123,6 +122,7 @@ public final class QueryUtils extends AppCompatActivity {
             }
         }catch(Exception e){
             Log.e("QueryUtils", "Problem parsing the headlines JSON results", e);
+            e.printStackTrace();
         }
         return headlines;
     }
