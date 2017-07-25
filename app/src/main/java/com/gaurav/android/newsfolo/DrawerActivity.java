@@ -19,7 +19,6 @@ import static com.gaurav.android.newsfolo.R.menu.drawer;
 
 public class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        HomeFragment.OnFragmentInteractionListener,
         EntertainmentFragment.OnFragmentInteractionListener,
         EducationFragment.OnFragmentInteractionListener,
         SportsFragment.OnFragmentInteractionListener,

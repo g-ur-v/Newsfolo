@@ -14,7 +14,10 @@ class HeadlineLoader extends AsyncTaskLoader<List<Headline>>{
 
     @Override
     protected List<Headline> onLoadInBackground() {
-        return super.onLoadInBackground();
+        if (mUrl == null){
+            return null;
+        }
+        return QueryUtils.fetchHeadlines(mUrl);
     }
 
     @Override

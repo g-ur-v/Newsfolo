@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class QueryUtils extends AppCompatActivity {
-
     private static final String LOG_TAG = QueryUtils.class.getSimpleName();
+    public static String jsonTester = null;
 
     private QueryUtils(){
     }
@@ -28,16 +28,16 @@ public final class QueryUtils extends AppCompatActivity {
     public static List<Headline> fetchHeadlines(String requestUrl){
         URL url = createUrl(requestUrl);
         String jsonResponse = null;
-
         try{
-            jsonResponse = makeHttpRequest(url);
+            jsonTester = jsonResponse = makeHttpRequest(url);
+
         } catch(IOException e){
             Log.e(LOG_TAG, "Problem making the HTTP request.", e);
         }
         return extractFeatureFromJson(jsonResponse);
     }
 
-    private static URL createUrl(String stringUrl){
+    public static URL createUrl(String stringUrl){
         URL url = null;
         try{
             url = new URL(stringUrl);
@@ -47,7 +47,7 @@ public final class QueryUtils extends AppCompatActivity {
         return url;
     }
 
-    private static String makeHttpRequest(URL url) throws IOException{
+    public static String makeHttpRequest(URL url) throws IOException{
         String jsonResponse = "";
         if (url == null){
             return jsonResponse;
@@ -99,22 +99,21 @@ public final class QueryUtils extends AppCompatActivity {
         }
         List<Headline> headlines = new ArrayList<>();
         try {
-            JSONObject baseJsonResponse = new JSONObject(headlinesJSON);
-            JSONArray headlinesArray = baseJsonResponse.getJSONArray("");
+            JSONArray headlinesArray = new JSONArray(headlinesJSON);
 
-            for (int i = 0; i < baseJsonResponse.length(); i++) {
-                JSONObject currentHeadline = headlinesArray.getJSONObject(i);
+            for (int i = 0; i < headlinesArray.length(); i++) {
+                JSONObject headlineObj = headlinesArray.getJSONObject(i);
 
-                JSONObject titleObj = currentHeadline.getJSONObject("title");
+                JSONObject titleObj = headlineObj.getJSONObject("title");
                 String title = titleObj.getString("rendered");
 
-                JSONObject idObj = currentHeadline.getJSONObject("id");
+                JSONObject idObj = headlineObj.getJSONObject("id");
                 int id = idObj.getInt("id");
 
-                JSONObject linkObj = currentHeadline.getJSONObject("link");
+                JSONObject linkObj = headlineObj.getJSONObject("link");
                 String link = linkObj.getString("link");
 
-                JSONObject authorNameObj = currentHeadline.getJSONObject("link");
+                JSONObject authorNameObj = headlineObj.getJSONObject("link");
                 String authorName= authorNameObj.getString("author");
 
                 Headline headline = new Headline(id, title, link, authorName);
