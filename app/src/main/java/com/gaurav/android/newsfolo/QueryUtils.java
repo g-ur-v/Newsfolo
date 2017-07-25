@@ -67,7 +67,7 @@ public final class QueryUtils extends AppCompatActivity {
             }else{
                 Log.e(LOG_TAG, "Error Response code: "+ urlConnection.getResponseCode());
             }
-        }catch(IOException e){
+        } catch(IOException e){
             Log.e(LOG_TAG, "Problem retrieving the headlines JSON results.", e);
         } finally {
             if (urlConnection != null){
@@ -107,14 +107,11 @@ public final class QueryUtils extends AppCompatActivity {
                 JSONObject titleObj = headlineObj.getJSONObject("title");
                 String title = titleObj.getString("rendered");
 
-                JSONObject idObj = headlineObj.getJSONObject("id");
-                int id = idObj.getInt("id");
+                int id = headlineObj.getInt("id");
 
-                JSONObject linkObj = headlineObj.getJSONObject("link");
-                String link = linkObj.getString("link");
+                String link = headlineObj.getString("link");
 
-                JSONObject authorNameObj = headlineObj.getJSONObject("link");
-                String authorName= authorNameObj.getString("author");
+                String authorName= headlineObj.getString("author");
 
                 Headline headline = new Headline(id, title, link, authorName);
                 headlines.add(headline);

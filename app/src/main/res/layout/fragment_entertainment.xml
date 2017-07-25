@@ -9,8 +9,6 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textColor="#6AB344"
-        android:text="This is a sample text\nsahdbfkbdusnjhdns\nbhfdssd\nbdsbkhd\najvsd\nngavsDG\n"
-        android:textSize="35sp" />
+        android:text="This is a sample text\nsahdbfkbdusnjhdns\nbhfdssd\nbdsbkhd\najvsd\nngavsDG\n"/>
 
 </FrameLayout>
