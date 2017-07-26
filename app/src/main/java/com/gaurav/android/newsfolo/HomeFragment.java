@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
 
 public class HomeFragment extends Fragment
         implements LoaderCallbacks<List<Headline>> {
-    private static final String REQUEST_URL = "https://www.newsfolo.com/wp-json/wp/v2/posts";
+    private static final String REQUEST_URL = "http://www.whizzygeeks.com/a.json";
     private static final Integer LOADER_ID = 1;
 
     private HomeHeadlineAdapter mAdapter;
@@ -45,7 +46,7 @@ public class HomeFragment extends Fragment
 
     @Override
     public Loader<List<Headline>> onCreateLoader(int id, Bundle args) {
-        Uri baseUri = Uri.parse("http://www.whizzygeeks.com/a.json");
+        Uri baseUri = Uri.parse(REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
         uriBuilder.appendQueryParameter("filter[category_name]","Editor's Picks");
         return new HeadlineLoader(context, baseUri.toString());
@@ -68,8 +69,15 @@ public class HomeFragment extends Fragment
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        new HeadlineLoader(context,REQUEST_URL);
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
+        mAdapter.clear();
     }
 
     @Override
@@ -92,7 +100,7 @@ public class HomeFragment extends Fragment
             }
         });
         try {
-        ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(CONNECTIVITY_SERVICE);
+            ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
             if (networkInfo == null || !networkInfo.isConnected()) {
                 android.support.v4.app.LoaderManager loaderManager = getLoaderManager();
@@ -104,6 +112,7 @@ public class HomeFragment extends Fragment
             }
         } catch (Exception e){
             e.printStackTrace();
+            Toast.makeText(context,"Exception in checking connectivity",Toast.LENGTH_LONG).show();
         }
     }
 }

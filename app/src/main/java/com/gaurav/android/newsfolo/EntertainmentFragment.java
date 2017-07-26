@@ -26,6 +26,7 @@ import static com.gaurav.android.newsfolo.QueryUtils.jsonTester;
  */
 public class EntertainmentFragment extends Fragment {
     URL url = createUrl("http://www.newsfolo.com/wp-json/wp/v2/posts/");
+    TextView textView;
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -65,6 +66,7 @@ public class EntertainmentFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
+
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
