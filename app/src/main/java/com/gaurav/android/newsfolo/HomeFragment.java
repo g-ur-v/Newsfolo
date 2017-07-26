@@ -77,7 +77,6 @@ public class HomeFragment extends Fragment
     @Override
     public void onDetach() {
         super.onDetach();
-        mAdapter.clear();
     }
 
     @Override
@@ -102,9 +101,11 @@ public class HomeFragment extends Fragment
         try {
             ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+            android.support.v4.app.LoaderManager loaderManager = getLoaderManager();
+            loaderManager.initLoader(LOADER_ID, null, this);
             if (networkInfo == null || !networkInfo.isConnected()) {
-                android.support.v4.app.LoaderManager loaderManager = getLoaderManager();
-                loaderManager.initLoader(LOADER_ID, null, this);
+                Toast.makeText(context,"Network Not Available",Toast.LENGTH_LONG).show();
             } else {
                 View loadingIndicator = getActivity().findViewById(R.id.loading_indicator);
                 loadingIndicator.setVisibility(View.GONE);

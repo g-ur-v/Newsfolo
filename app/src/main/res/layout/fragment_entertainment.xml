@@ -5,10 +5,12 @@
     tools:context="com.gaurav.android.newsfolo.EntertainmentFragment"
     android:layout_marginTop="?android:attr/actionBarSize"
     android:paddingTop="48dp">
-    <TextView
-        android:id="@+id/textView"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="This is a sample text\nsahdbfkbdusnjhdns\nbhfdssd\nbdsbkhd\najvsd\nngavsDG\n"/>
-
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </ScrollView>
 </FrameLayout>
