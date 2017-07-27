@@ -1,76 +1,77 @@
 package com.gaurav.android.newsfolo;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
-import static com.gaurav.android.newsfolo.QueryUtils.createUrl;
-import static com.gaurav.android.newsfolo.QueryUtils.jsonTester;
+import static android.content.Context.CONNECTIVITY_SERVICE;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link EntertainmentFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link EntertainmentFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class EntertainmentFragment extends Fragment {
-    URL url = createUrl("http://www.newsfolo.com/wp-json/wp/v2/posts/");
-    TextView textView;
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        TextView textView = (TextView) getActivity().findViewById(R.id.textView);
-        try{
+public class EntertainmentFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Headline>> {
+    private static final String REQUEST_URL = "https://www.newsfolo.com/wp-json/wp/v2/posts";
+    private static final Integer LOADER_ID = 1;
 
-            new HeadlineLoader(getActivity(), Uri.parse("http://www.whizzygeeks.com/a.json").toString());
-            if (jsonTester == null)
-                textView.setText(R.string.no_headlines);
-            else
-                textView.setText(jsonTester);
-        } catch (Exception e){
-            e.printStackTrace();
-            textView.setText("Exception Occured");
-        }
-    }
-    public static EntertainmentFragment newInstance(String param1, String param2) {
-        EntertainmentFragment fragment = new EntertainmentFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private HomeHeadlineAdapter mAdapter;
+    private TextView mEmptyStateTextView;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    private Context context ;
+
+    public EntertainmentFragment() {
+        // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_entertainment, container, false);
+        return inflater.inflate(R.layout.fragment_home, container, false);
+    }
+
+
+    @Override
+    public Loader<List<Headline>> onCreateLoader(int id, Bundle args) {
+        Uri baseUri = Uri.parse(REQUEST_URL);
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+        uriBuilder.appendQueryParameter("filter[category_name]","Entertainment");
+        return new HeadlineLoader(context, baseUri.toString());
+    }
+
+    @Override
+    public void onLoadFinished(android.support.v4.content.Loader<List<Headline>> loader, List<Headline> headlines) {
+        View loadingIndicator = getActivity().findViewById(R.id.loading_indicator);
+        loadingIndicator.setVisibility(View.GONE);
+        mEmptyStateTextView.setText(R.string.no_headlines);
+        mAdapter.clear();
+        if (headlines!= null && !headlines.isEmpty()){
+            mAdapter.addAll(headlines);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(android.support.v4.content.Loader<List<Headline>> loader) {
+        mAdapter.clear();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+        new HeadlineLoader(context,REQUEST_URL);
     }
 
     @Override
@@ -78,8 +79,41 @@ public class EntertainmentFragment extends Fragment {
         super.onDetach();
     }
 
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        context = getActivity();
+        ListView headlineListView = (ListView) getActivity().findViewById(R.id.list);
+        headlineListView.setEmptyView(mEmptyStateTextView);
+        mEmptyStateTextView = (TextView) getActivity().findViewById(R.id.empty_view);
+        mAdapter = new HomeHeadlineAdapter(context, new ArrayList<Headline>());
+        headlineListView.setAdapter(mAdapter);
+        headlineListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View views, int position, long l) {
+                Headline currentHeadline = mAdapter.getItem(position);
+                assert currentHeadline != null;
+                Uri headlineUri = Uri.parse(currentHeadline.getLink());
+                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, headlineUri);
+                startActivity(websiteIntent);
+            }
+        });
+        try {
+            ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+            android.support.v4.app.LoaderManager loaderManager = getLoaderManager();
+            loaderManager.initLoader(LOADER_ID, null, this);
+            if (networkInfo == null || !networkInfo.isConnected()) {
+                Toast.makeText(context,"Network Not Available",Toast.LENGTH_LONG).show();
+            } else {
+                View loadingIndicator = getActivity().findViewById(R.id.loading_indicator);
+                loadingIndicator.setVisibility(View.GONE);
+                mEmptyStateTextView.setVisibility(View.GONE);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(context,"Exception in checking connectivity",Toast.LENGTH_LONG).show();
+        }
     }
 }

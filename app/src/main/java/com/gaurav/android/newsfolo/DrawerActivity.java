@@ -1,8 +1,8 @@
 package com.gaurav.android.newsfolo;
 
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -18,11 +18,7 @@ import android.view.MenuItem;
 import static com.gaurav.android.newsfolo.R.menu.drawer;
 
 public class DrawerActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        EntertainmentFragment.OnFragmentInteractionListener,
-        EducationFragment.OnFragmentInteractionListener,
-        SportsFragment.OnFragmentInteractionListener,
-        PoliticsFragment.OnFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener{
     private ActionBarDrawerToggle toggle;
     private ViewPager viewPager;
 
@@ -101,7 +97,7 @@ public class DrawerActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_home) {
             viewPager.setCurrentItem(0);
@@ -134,9 +130,5 @@ public class DrawerActivity extends AppCompatActivity
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         toggle.onConfigurationChanged(newConfig);
-    }
-
-    public void onFragmentInteraction(Uri uri) {
-
     }
 }
