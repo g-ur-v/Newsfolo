@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -25,11 +24,11 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
 
 public class HomeFragment extends Fragment
         implements LoaderCallbacks<List<Headline>> {
-    private static final String REQUEST_URL = "https://www.newsfolo.com/wp-json/wp/v2/posts";
+    private static final String REQUEST_URL = "http://test.newsfolo.com/wp-json/wp/v2/posts";
     private static final Integer LOADER_ID = 1;
 
     private HomeHeadlineAdapter mAdapter;
-    private TextView mEmptyStateTextView;
+/*    private TextView mEmptyStateTextView;*/
 
     private Context context ;
 
@@ -54,9 +53,9 @@ public class HomeFragment extends Fragment
 
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<List<Headline>> loader, List<Headline> headlines) {
-        View loadingIndicator = getActivity().findViewById(R.id.loading_indicator);
+        /*View loadingIndicator = getActivity().findViewById(R.id.loading_indicator);
         loadingIndicator.setVisibility(View.GONE);
-        mEmptyStateTextView.setText(R.string.no_headlines);
+        mEmptyStateTextView.setText(R.string.no_headlines);*/
         mAdapter.clear();
         if (headlines!= null && !headlines.isEmpty()){
             mAdapter.addAll(headlines);
@@ -84,8 +83,8 @@ public class HomeFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
         context = getActivity();
         ListView headlineListView = (ListView) getActivity().findViewById(R.id.list);
-        headlineListView.setEmptyView(mEmptyStateTextView);
-        mEmptyStateTextView = (TextView) getActivity().findViewById(R.id.empty_view);
+        /*headlineListView.setEmptyView(mEmptyStateTextView);
+        mEmptyStateTextView = (TextView) getActivity().findViewById(R.id.empty_view);*/
         mAdapter = new HomeHeadlineAdapter(context, new ArrayList<Headline>());
         headlineListView.setAdapter(mAdapter);
         headlineListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -102,14 +101,16 @@ public class HomeFragment extends Fragment
             ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-            android.support.v4.app.LoaderManager loaderManager = getLoaderManager();
-            loaderManager.initLoader(LOADER_ID, null, this);
+
             if (networkInfo == null || !networkInfo.isConnected()) {
                 Toast.makeText(context,"Network Not Available",Toast.LENGTH_LONG).show();
-            } else {
+            } else {/*
                 View loadingIndicator = getActivity().findViewById(R.id.loading_indicator);
                 loadingIndicator.setVisibility(View.GONE);
-                mEmptyStateTextView.setVisibility(View.GONE);
+                mEmptyStateTextView.setVisibility(View.GONE);*/
+                Toast.makeText(context,"Network Available",Toast.LENGTH_LONG).show();
+                android.support.v4.app.LoaderManager loaderManager = getLoaderManager();
+                loaderManager.initLoader(LOADER_ID, null, this);
             }
         } catch (Exception e){
             e.printStackTrace();
