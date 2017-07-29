@@ -1,5 +1,6 @@
 package com.gaurav.android.newsfolo;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -8,9 +9,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -21,15 +26,19 @@ import java.util.List;
 public final class QueryUtils extends AppCompatActivity {
     private static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
-    private QueryUtils(){
+    public QueryUtils(){
     }
 
-    public static List<Headline> fetchHeadlines(String requestUrl){
+    public static List<Headline> fetchHeadlines(String requestUrl, Context context){
         URL url = createUrl(requestUrl);
         String jsonResponse = null;
         try{
-            jsonResponse = makeHttpRequest(url);
-
+            if (!fileDataChecker("download.txt", context)) {
+                jsonResponse = makeHttpRequest(url);
+                writeToFile(jsonResponse, context);
+            } else{
+                jsonResponse = readFromFile(context);
+            }
         } catch(IOException e){
             Log.e(LOG_TAG, "Problem making the HTTP request.", e);
         }
@@ -124,63 +133,59 @@ public final class QueryUtils extends AppCompatActivity {
         }
         return headlines;
     }
-}
-/*String url = "https://www.newsfolo.com/wp-json/wp/v2/posts";
-    ListView postList;
-    Map<String,Object> mapPost;
-    Map<String,Object> mapTitle;
-    int postID;
-    String postTitle[];
-    List<Object> list;
-    Gson gson;
-    ProgressDialog progressDialog;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_home);
+    private static void writeToFile(String data, Context context){
+        try{
+            OutputStreamWriter outputStreamWriter =  new OutputStreamWriter(context.openFileOutput("download.txt", Context.MODE_APPEND));
+            outputStreamWriter.write(data);
+            outputStreamWriter.close();
+        }catch(IOException e){
+            Log.e("QueryUtils", "Problem writing JSON to the file", e);
+            e.printStackTrace();
+        }
+    }
 
-        postList = (ListView)findViewById(R.id.postList);
-        progressDialog = new ProgressDialog(QueryUtils.this);
-        progressDialog.setMessage("Loading...");
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.show();
-
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String s) {
-                gson = new Gson();
-                list = (List) gson.fromJson(s, List.class);
-                postTitle = new String[list.size()];
-
-                for(int i=0;i<list.size();++i){
-                    mapPost = (Map<String,Object>)list.get(i);
-                    mapTitle = (Map<String, Object>) mapPost.get("title");
-                    postTitle[i] = (String) mapTitle.get("rendered");
+    private static String readFromFile(Context context){
+        String result = "";
+        try {
+            InputStream inputStream = context.openFileInput("download.txt");
+            if (inputStream != null) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String tempString;
+                StringBuilder stringBuilder = new StringBuilder();
+                while((tempString =bufferedReader.readLine())!=null){
+                    stringBuilder.append(tempString);
                 }
-
-                postList.setAdapter(new ArrayAdapter(QueryUtils.this,R.layout.home_list_item,postTitle));
-                progressDialog.dismiss();
+                inputStream.close();
+                result = stringBuilder.toString();
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                Toast.makeText(QueryUtils.this, "Some error occurred", Toast.LENGTH_LONG).show();
+        } catch(IOException e){
+            Log.e("QueryUtils", "Problem reading JSON from the file", e);
+            e.printStackTrace();
+        }
+        catch (NullPointerException e){
+            Log.e("QueryUtils", "Problem reading JSON from the file (open File Input causing error)", e);
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private static boolean fileDataChecker(String fileName, Context context){
+        boolean result = false;
+        try{
+            File file = new File(context.getCacheDir(),fileName);
+            if (file.exists()) {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                result = br.readLine() != null;
             }
-        });
-
-        RequestQueue rQueue = Volley.newRequestQueue(QueryUtils.this);
-        rQueue.add(request);
-
-        postList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mapPost = (Map<String,Object>)list.get(position);
-                postID = ((Double)mapPost.get("id")).intValue();
-
-                Intent intent = new Intent(getApplicationContext(),HomeFragment.class);
-                intent.putExtra("id", ""+postID);
-                startActivity(intent);
-            }
-        });
-    }*/
+        }  catch(FileNotFoundException file){
+            Log.e("QueryUtils", "Problem reading JSON from the file while file checking(file not present)", file);
+            file.printStackTrace();
+        } catch (IOException e){
+            Log.e("QueryUtils", "Problem reading JSON form the file while checking", e);
+            e.printStackTrace();
+        }
+        return result;
+    }
+}
