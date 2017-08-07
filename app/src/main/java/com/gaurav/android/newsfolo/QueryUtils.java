@@ -114,17 +114,22 @@ public final class QueryUtils extends AppCompatActivity {
 
                 int id = headlineObj.getInt("id");
 
+                String time = headlineObj.getString("modified_gmt");
+
                 JSONObject titleObj = headlineObj.getJSONObject("title");
                 String title = titleObj.getString("rendered");
 
                 String link = headlineObj.getString("link");
+
+                JSONObject contentObj = headlineObj.getJSONObject("content");
+                String content = contentObj.getString("rendered");
 
                 String authorName= headlineObj.getString("author");
 
                 JSONObject imageObj = headlineObj.getJSONObject("better_featured_image");
                 String imageSrc = imageObj.getString("source_url");
 
-                Headline headline = new Headline(id, title, link, authorName,imageSrc);
+                Headline headline = new Headline(id, title, link, authorName,imageSrc, content, time);
                 headlines.add(headline);
             }
         }catch(Exception e){

@@ -9,12 +9,14 @@ class Headline {
     private String mAuthorName;
     private String mImageUrl;
 
-    Headline(int id, String title, String link, String AuthorName, String imageUrl){
+    Headline(int id, String title, String link, String AuthorName, String imageUrl, String content, String time){
         mId = id;
         mTitle = title;
         mLink = link;
         mAuthorName = AuthorName;
         mImageUrl = imageUrl;
+        mContent = content;
+        mTime = time;
     }
 
     int getId(){

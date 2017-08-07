@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -21,13 +22,14 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
 public class HomeFragment extends Fragment
-        implements LoaderCallbacks<List<Headline>> {
+        implements LoaderCallbacks<List<Headline>>{
     private static final String REQUEST_URL = "http://test.newsfolo.com/wp-json/wp/v2/posts";
     private static final Integer LOADER_ID = 1;
 
@@ -43,14 +45,7 @@ public class HomeFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .build();
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity())
-                .defaultDisplayImageOptions(defaultOptions)
-                .build();
-        ImageLoader.getInstance().init(config);
+        
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -106,9 +101,9 @@ public class HomeFragment extends Fragment
             public void onItemClick(AdapterView<?> parent, View views, int position, long l) {
                 Headline currentHeadline = mAdapter.getItem(position);
                 assert currentHeadline != null;
-                Uri headlineUri = Uri.parse(currentHeadline.getLink());
-                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, headlineUri);
-                startActivity(websiteIntent);
+                Intent intent= new Intent(getActivity(), DetailedHeadlineActivity.class);
+                intent.putExtra("currentHeadline", (Serializable) currentHeadline);
+                startActivity(intent);
             }
         });
         try {

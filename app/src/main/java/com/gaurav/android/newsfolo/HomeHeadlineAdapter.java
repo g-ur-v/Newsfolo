@@ -36,11 +36,7 @@ class HomeHeadlineAdapter extends ArrayAdapter<Headline> {
             assert currentHeadline != null;
 
             ImageView HeadlineImage = (ImageView) listItemView.findViewById(R.id.headline_image);
-            /*URL url = currentHeadline.getImageUrl();
-            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            HeadlineImage.setImageBitmap(bmp);*/
             imageLoader = ImageLoader.getInstance();
-            imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
             imageLoader.displayImage(currentHeadline.getImageUrl(), HeadlineImage, new ImageLoadingListener(){
                 /**
                  * Is called when image loading task was started

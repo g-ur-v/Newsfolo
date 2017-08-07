@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,9 +93,9 @@ public class EntertainmentFragment extends Fragment implements LoaderManager.Loa
             public void onItemClick(AdapterView<?> parent, View views, int position, long l) {
                 Headline currentHeadline = mAdapter.getItem(position);
                 assert currentHeadline != null;
-                Uri headlineUri = Uri.parse(currentHeadline.getLink());
-                Intent websiteIntent = new Intent(Intent.ACTION_VIEW, headlineUri);
-                startActivity(websiteIntent);
+                Intent intent = new Intent(getActivity(), DetailedHeadlineActivity.class);
+                intent.putExtra("currentHeadline", (Serializable) currentHeadline);
+                startActivity(intent);
             }
         });
         try {
