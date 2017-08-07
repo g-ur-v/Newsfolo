@@ -94,7 +94,7 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
                 Headline currentHeadline = mAdapter.getItem(position);
                 assert currentHeadline != null;
                 Intent intent = new Intent(getActivity(), DetailedHeadlineActivity.class);
-                intent.putExtra("currentHeadline", (Serializable) currentHeadline);
+                intent.putExtra("currentHeadline", currentHeadline);
                 startActivity(intent);
             }
         });

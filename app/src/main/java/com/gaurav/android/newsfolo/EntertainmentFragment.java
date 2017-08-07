@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -24,7 +25,7 @@ import java.util.List;
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
 
-public class EntertainmentFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Headline>> {
+public class EntertainmentFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Headline>>, Serializable {
     private static final String REQUEST_URL = "http://test.newsfolo.com/wp-json/wp/v2/posts";
     private static final Integer LOADER_ID = 1;
 
@@ -94,7 +95,7 @@ public class EntertainmentFragment extends Fragment implements LoaderManager.Loa
                 Headline currentHeadline = mAdapter.getItem(position);
                 assert currentHeadline != null;
                 Intent intent = new Intent(getActivity(), DetailedHeadlineActivity.class);
-                intent.putExtra("currentHeadline", (Serializable) currentHeadline);
+                intent.putExtra("currentHeadline", currentHeadline);
                 startActivity(intent);
             }
         });

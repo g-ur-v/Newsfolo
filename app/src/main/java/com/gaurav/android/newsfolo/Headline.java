@@ -1,6 +1,8 @@
 package com.gaurav.android.newsfolo;
 
-class Headline {
+import java.io.Serializable;
+
+class Headline implements Serializable{
     private int mId;
     private String mTitle;
     private String mTime;

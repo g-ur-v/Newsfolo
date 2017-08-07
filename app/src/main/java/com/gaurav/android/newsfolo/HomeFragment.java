@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -102,7 +103,7 @@ public class HomeFragment extends Fragment
                 Headline currentHeadline = mAdapter.getItem(position);
                 assert currentHeadline != null;
                 Intent intent= new Intent(getActivity(), DetailedHeadlineActivity.class);
-                intent.putExtra("currentHeadline", (Serializable) currentHeadline);
+                intent.putExtra("currentHeadline", currentHeadline);
                 startActivity(intent);
             }
         });
