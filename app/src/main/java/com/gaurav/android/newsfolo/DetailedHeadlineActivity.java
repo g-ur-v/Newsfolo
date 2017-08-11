@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -60,6 +62,11 @@ public class DetailedHeadlineActivity extends AppCompatActivity implements Seria
                 }
             });
 
+            String mHeadlineTitle = mCurrentHeadline.getTitle();
+            String formattedHeadlineTitle = stripHtml(mHeadlineTitle);
+            TextView headlineTitle = (TextView) findViewById(R.id.Headline_title_detailed);
+            headlineTitle.setText(formattedHeadlineTitle);
+
             String mAuthorName = mCurrentHeadline.getAuthorName();
             TextView authorName = (TextView) findViewById(R.id.author_name_content);
             authorName.setText(mAuthorName);
@@ -71,9 +78,21 @@ public class DetailedHeadlineActivity extends AppCompatActivity implements Seria
             String mContent = mCurrentHeadline.getContent();
             TextView contentTextView = (TextView) findViewById(R.id.news_content);
             contentTextView.setText(mContent);
+
         } catch (NullPointerException e){
             Toast.makeText(this, "NullPointerExceptionOccurred", Toast.LENGTH_LONG).show();
         }
 
     }
+
+    public String stripHtml(String html) {
+        /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            return Html.fromHtml(html, Html.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH);
+        } else {
+            return Html.fromHtml(html);
+        }*/
+        html = html.replaceAll("\\<.*?\\>", "");
+        return html;
+    }
+
 }

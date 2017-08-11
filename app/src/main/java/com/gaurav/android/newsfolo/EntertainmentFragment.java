@@ -26,7 +26,7 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
 
 
 public class EntertainmentFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Headline>>, Serializable {
-    private static final String REQUEST_URL = "http://test.newsfolo.com/wp-json/wp/v2/posts";
+    private static final String REQUEST_URL = "https://www.newsfolo.com/wp-json/wp/v2/posts";
     private static final Integer LOADER_ID = 1;
 
     private HomeHeadlineAdapter mAdapter;

@@ -16,14 +16,25 @@
                 android:id="@+id/content_image"
                 android:layout_width="match_parent"
                 android:layout_height="196dp"
+                android:scaleType="centerInside"
+                android:paddingBottom="16dp"
                 tools:src="@drawable/newsfolo_sample_image" />
+            <TextView
+                android:id="@+id/Headline_title_detailed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="32sp"
+                android:layout_below="@id/content_image"
+                tools:text="A Sample Title for testing."/>
             <RelativeLayout
                 android:id="@+id/auth_date_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_below="@id/content_image"
-                android:divider="?android:dividerHorizontal">
+                android:layout_below="@id/Headline_title_detailed"
+                android:divider="?android:dividerHorizontal"
+                android:paddingTop="16dp">
                 <TextView
                     android:id="@+id/author_name_content"
                     android:layout_width="wrap_content"
@@ -47,7 +58,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/auth_date_details"
                 android:paddingTop="16dp"
-                tools:textStyle="bold"
+                android:paddingBottom="16dp"
+                android:textStyle="normal"
+                android:textSize="20sp"
                 tools:text="This is a sample text for testing stuff.
         \n And is made multi line
         \n to check the width of the paragraph" />

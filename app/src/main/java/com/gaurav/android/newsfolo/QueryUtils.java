@@ -23,6 +23,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.ssl.HttpsURLConnection;
+
 public final class QueryUtils extends AppCompatActivity {
     private static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
@@ -60,10 +62,10 @@ public final class QueryUtils extends AppCompatActivity {
         if (url == null){
             return jsonResponse;
         }
-        HttpURLConnection urlConnection = null;
+        HttpsURLConnection urlConnection = null;
         InputStream inputStream = null;
         try{
-            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection = (HttpsURLConnection) url.openConnection();
             urlConnection.setReadTimeout(10000);
             urlConnection.setConnectTimeout(15000);
             urlConnection.setRequestMethod("GET");
@@ -139,9 +141,10 @@ public final class QueryUtils extends AppCompatActivity {
         return headlines;
     }
 
-    private static void writeToFile(String data, Context context){
+    public static void writeToFile(String data, Context context){
         try{
-            OutputStreamWriter outputStreamWriter =  new OutputStreamWriter(context.openFileOutput("download.txt", Context.MODE_APPEND));
+            String path = context.getFilesDir().toString();
+            OutputStreamWriter outputStreamWriter =  new OutputStreamWriter(context.openFileOutput((path + "download.txt"), Context.MODE_APPEND));
             outputStreamWriter.write(data);
             outputStreamWriter.close();
         }catch(IOException e){
@@ -150,7 +153,7 @@ public final class QueryUtils extends AppCompatActivity {
         }
     }
 
-    private static String readFromFile(Context context){
+    public static String readFromFile(Context context){
         String result = "";
         try {
             InputStream inputStream = context.openFileInput("download.txt");
@@ -179,7 +182,7 @@ public final class QueryUtils extends AppCompatActivity {
     private static boolean fileDataChecker(String fileName, Context context){
         boolean result = false;
         try{
-            File file = new File(context.getCacheDir(),fileName);
+            File file = new File(context.getFilesDir(),fileName);
             if (file.exists()) {
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 result = br.readLine() != null;
