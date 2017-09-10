@@ -23,7 +23,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.net.ssl.HttpsURLConnection;
+//import javax.net.ssl.HttpsURLConnection;
 
 public final class QueryUtils extends AppCompatActivity {
     private static final String LOG_TAG = QueryUtils.class.getSimpleName();
@@ -62,10 +62,10 @@ public final class QueryUtils extends AppCompatActivity {
         if (url == null){
             return jsonResponse;
         }
-        HttpsURLConnection urlConnection = null;
+        HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
         try{
-            urlConnection = (HttpsURLConnection) url.openConnection();
+            urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setReadTimeout(10000);
             urlConnection.setConnectTimeout(15000);
             urlConnection.setRequestMethod("GET");
@@ -143,8 +143,8 @@ public final class QueryUtils extends AppCompatActivity {
 
     public static void writeToFile(String data, Context context){
         try{
-            String path = context.getFilesDir().toString();
-            OutputStreamWriter outputStreamWriter =  new OutputStreamWriter(context.openFileOutput((path + "download.txt"), Context.MODE_APPEND));
+            //String path = context.getFilesDir().toString();
+            OutputStreamWriter outputStreamWriter =  new OutputStreamWriter(context.openFileOutput("download.txt", Context.MODE_APPEND));
             outputStreamWriter.write(data);
             outputStreamWriter.close();
         }catch(IOException e){
@@ -182,7 +182,7 @@ public final class QueryUtils extends AppCompatActivity {
     private static boolean fileDataChecker(String fileName, Context context){
         boolean result = false;
         try{
-            File file = new File(context.getFilesDir(),fileName);
+            File file = new File(fileName);
             if (file.exists()) {
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 result = br.readLine() != null;

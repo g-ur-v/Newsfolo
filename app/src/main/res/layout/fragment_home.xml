@@ -4,15 +4,25 @@
     android:layout_height="match_parent"
     tools:context="com.gaurav.android.newsfolo.HomeFragment"
     android:layout_marginTop="?android:attr/actionBarSize">
+    <!--<ImageSwitcher
+        android:id="@+id/headline_gallery_view_flipper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_alignParentTop="true"
+        android:autoStart="true"
+        android:flipInterval="5000"
+        android:gravity="center_horizontal"
+        tools:src ="@drawable/newsfolo_sample_image"/>-->
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:divider="@null"
         android:dividerHeight="0dp"/>
-<!--
-    &lt;!&ndash; Empty view is only visible when the list has no items. &ndash;&gt;
+    <!-- Empty view is only visible when the list has no items. -->
     <TextView
         android:id="@+id/empty_view"
         android:layout_width="wrap_content"
@@ -21,11 +31,11 @@
         android:textAppearance="?android:textAppearanceMedium"
         tools:text="56"/>
 
-    &lt;!&ndash; Loading indicator for user feedback between queries to Newsfolo &ndash;&gt;
+    <!-- Loading indicator for user feedback between queries to Newsfolo -->
     <ProgressBar
         android:id="@+id/loading_indicator"
         style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>-->
+        android:layout_centerInParent="true"/>
 </RelativeLayout>

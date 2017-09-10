@@ -21,5 +21,10 @@
     <string name="category_education">Education</string>
     <string name="category_politics">Politics</string>
     <string name="no_headlines">OOPS! Sorry No Headlines Right Now</string>
+    <string name="auto_refresh_preference">Auto Refresh Feeds</string>
+    <string name="preferences_personalize">Personalize</string>
+    <string name="preferences_support">Support</string>
+    <string name="download_images_preference">Download Images</string>
+    <string name="preferences_title">Preferences</string>
     <string name="hello_blank_fragment">Hello this is a blank fragment \n and a multi line statement to check that all thewords \n are visible\n or not.</string>
 </resources>
