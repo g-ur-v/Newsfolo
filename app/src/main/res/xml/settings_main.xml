@@ -1,4 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:title="@string/preferences_title">
+    <PreferenceCategory
+        android:title = "@string/preferences_personalize"
+        android:key = "pref_key_personalize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <CheckBoxPreference
+            android:key="@string/auto_refresh_preference"
+            android:title= "@string/auto_refresh_preference"
+            android:summary="Select to turn on automatic updating"
+            android:defaultValue="true"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+        <CheckBoxPreference
+            android:key="@string/download_images_preference"
+            android:title= "@string/download_images_preference"
+            android:summary="Select to download images"
+            android:defaultValue="false"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title = "@string/preferences_support"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <intent
+            android:action="android.intent.action.VIEW"/>
+    </PreferenceCategory>
+
 
 </PreferenceScreen>
