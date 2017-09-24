@@ -4,10 +4,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -15,26 +18,28 @@ import java.util.List;
  * Created by gaurav on 24/8/17.
  */
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_preferences);
-//        getSupportFragmentManager().beginTransaction().add(R.id.settings_fragment /*,new SettingsFragment()*/).commit();
-    }
 
-    public static class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener{
+//        getSupportFragmentManager().beginTransaction().add(R.id.settings_fragment /*,new SettingsFragment()*/).commit();
+        getFragmentManager().beginTransaction().replace(R.id.settings_fragment, new SettingsFragment()).commit();
+        }
+
+        public static class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener{
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.settings_main);
+        super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.settings_main);
 
-            Preference OfflineReading = findPreference(getString(R.string.auto_refresh_preference));
-            bindPreferenceSummaryToValue(OfflineReading);
+        Preference OfflineReading = findPreference(getString(R.string.auto_refresh_preference));
+            //bindPreferenceSummaryToValue(OfflineReading);
 
-            Preference DownloadImages = findPreference(getString(R.string.download_images_preference));
-            bindPreferenceSummaryToValue(DownloadImages);
-        }
+        Preference DownloadImages = findPreference(getString(R.string.download_images_preference));
+        //bindPreferenceSummaryToValue(DownloadImages);
+    }
 
         @Override
         public boolean onPreferenceChange(Preference preference, Object o) {
@@ -60,5 +65,5 @@ public class SettingsActivity extends AppCompatActivity {
             onPreferenceChange(preference, preferenceString);
         }
 
-    }
+        }
 }
