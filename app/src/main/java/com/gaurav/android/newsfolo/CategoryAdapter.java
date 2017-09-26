@@ -17,7 +17,7 @@ public class CategoryAdapter extends FragmentPagerAdapter {
     }
     public Fragment getItem(int position){
         switch (position){
-            case 0: return new HomeFragment();
+            case 0: return new RssFeedData();
             case 1: return new EntertainmentFragment();
             case 2: return new SportsFragment();
             case 3: return new EducationFragment();
