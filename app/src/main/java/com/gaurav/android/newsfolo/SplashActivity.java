@@ -3,50 +3,55 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.widget.ImageView;
 
 public class SplashActivity extends Activity {
+
+    private static final int STOPSPLASH = 0;
     //time in milliseconds
     private static final long SPLASHTIME = 3000;
-    public static List<Headline> HeadlinesList;
-    private ProgressBar progressBar;
 
+    private ImageView splash;
+
+    //handler for splash screen
+    private Handler splashHandler = new Handler() {
+        /* (non-Javadoc)
+         * @see android.os.Handler#handleMessage(android.os.Message)
+         */
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case STOPSPLASH:
+                    //remove SplashScreen from view
+                    splash.setVisibility(View.GONE);
+                    break;
+            }
+            super.handleMessage(msg);
+        }
+    };
+
+    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.splash_screen);
-        try {
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, Const.HomeUrl, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String s) {
-                    QueryUtils.writeToFile(s,getApplicationContext());
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    volleyError.printStackTrace();
-                    Toast.makeText(getApplicationContext(),"Volley Error",Toast.LENGTH_LONG).show();
-                    }
-            });
-            SingletonVolley.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-            HeadlinesList = new ArrayList<>();
-            progressBar.setVisibility(View.GONE);
-            Intent i = new Intent(SplashActivity.this, DrawerActivity.class);
-            startActivity(i);
-        }
+        splash = (ImageView) findViewById(R.id.splashscreen);
+        Message msg = new Message();
+        msg.what = STOPSPLASH;
+        splashHandler.sendMessageDelayed(msg, SPLASHTIME);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // This method will be executed once the timer is over
+                // Start your app main activity
+                Intent i = new Intent(SplashActivity.this, DrawerActivity.class);
+                startActivity(i);
+
+                // close this activity
+                finish();
+            }
+        }, SPLASHTIME);
     }
 }

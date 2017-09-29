@@ -7,6 +7,9 @@ import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,6 +21,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -33,18 +37,20 @@ public final class QueryUtils extends AppCompatActivity {
 
     public static List<Headline> fetchHeadlines(String requestUrl, Context context){
         URL url = createUrl(requestUrl);
-        String jsonResponse = null;
+//        String jsonResponse = null;
+        InputStream inputStream = null;
         try{
             if (!fileDataChecker("download.txt", context)) {
-                jsonResponse = makeHttpRequest(url);
-                writeToFile(jsonResponse, context);
+                inputStream = makeHttpRequest(url);
+//                writeToFile(jsonResponse, context);
             } else{
-                jsonResponse = readFromFile(context);
+//                jsonResponse = readFromFile(context);
             }
         } catch(IOException e){
             Log.e(LOG_TAG, "Problem making the HTTP request.", e);
         }
-        return extractFeatureFromJson(jsonResponse);
+//        return extractFeatureFromJson(jsonResponse);
+        return extractFeatureFromXml(inputStream);
     }
 
     public static URL createUrl(String stringUrl){
@@ -57,11 +63,11 @@ public final class QueryUtils extends AppCompatActivity {
         return url;
     }
 
-    public static String makeHttpRequest(URL url) throws IOException{
-        String jsonResponse = "";
+    public static InputStream makeHttpRequest(URL url) throws IOException{
+        /*String jsonResponse = "";
         if (url == null){
             return jsonResponse;
-        }
+        }*/
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
         try{
@@ -73,7 +79,7 @@ public final class QueryUtils extends AppCompatActivity {
 
             if(urlConnection.getResponseCode()==200){
                 inputStream = urlConnection.getInputStream();
-                jsonResponse = readFromStream(inputStream);
+//                jsonResponse = readFromStream(inputStream);
             }else{
                 Log.e(LOG_TAG, "Error Response code: "+ urlConnection.getResponseCode());
             }
@@ -87,7 +93,7 @@ public final class QueryUtils extends AppCompatActivity {
                 inputStream.close();
             }
         }
-        return jsonResponse;
+        return inputStream;
     }
 
     private static String readFromStream(InputStream inputStream) throws IOException{
@@ -139,6 +145,57 @@ public final class QueryUtils extends AppCompatActivity {
             e.printStackTrace();
         }
         return headlines;
+    }
+
+    private static List<Headline> extractFeatureFromXml(InputStream inputStream){
+        ArrayList<Headline> feeds = new ArrayList<>();
+        String tagname;
+        XmlPullParserFactory factory = null;
+        XmlPullParser parser = null;
+        try{
+            factory = XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(true);
+            parser = factory.newPullParser();
+            //DefaultHttpClient client = new DefaultHttpClient();
+            //HttpGet method = new HttpGet(new URI(params[0]));
+            //HttpResponse res = client.execute(method);
+            //InputStream is = res.getEntity().getContent();
+            parser.setInput(new InputStreamReader(inputStream));
+            int eventType = parser.getEventType();
+            Headline headline = new Headline();
+            String text = "";
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                tagname = parser.getName();
+                switch (eventType) {
+                    case XmlPullParser.START_TAG:
+                        if (tagname.equalsIgnoreCase("item")) {
+                            headline = new Headline();
+                        }
+                        break;
+                    case XmlPullParser.TEXT:
+                        text = parser.getText();
+                        break;
+                    case XmlPullParser.END_TAG:
+                        if (tagname.equalsIgnoreCase("item")) {
+                            feeds.add(headline);
+                        }else if (tagname.equalsIgnoreCase("title")){
+                            headline.setTitle(text);
+                        }else if (tagname.equalsIgnoreCase("link")) {
+                            headline.setLink(text);
+                        }else if(tagname.equalsIgnoreCase("thumbnail")){
+                            headline.setImageUrl(parser.getAttributeValue(null,"url"));
+                        }
+                    default:
+                        break;
+                }
+                eventType = parser.next();
+            }
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return feeds;
     }
 
     public static void writeToFile(String data, Context context){

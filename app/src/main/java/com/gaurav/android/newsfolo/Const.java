@@ -10,7 +10,7 @@ class Const {
     static final String EntertainmentUrl = "http://test.newsfolo.com/wp-json/wp/v2/posts?filter[category_name]=Entertainment";
     static final String PoliticsUrl = "http://test.newsfolo.com/wp-json/wp/v2/posts?filter[category_name]=Politics";
     static final String SportsUrl = "http://test.newsfolo.com/wp-json/wp/v2/posts?filter[category_name]=Sports";
-    
+
     static final String HomeUrlXml = "https://www.newsfolo.com/feed/";
     static final String EducationUrlXml = "https://www.newsfolo.com/category/education/feed";
     static final String IndiaUrlXml = "https://www.newsfolo.com/category/india/feed";

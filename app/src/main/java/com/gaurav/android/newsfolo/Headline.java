@@ -11,6 +11,10 @@ class Headline implements Serializable{
     private String mAuthorName;
     private String mImageUrl;
 
+    Headline(){
+
+    }
+
     Headline(int id, String title, String link, String AuthorName, String imageUrl, String content, String time){
         mId = id;
         mTitle = title;
@@ -47,5 +51,33 @@ class Headline implements Serializable{
 
     String getImageUrl(){
         return mImageUrl;
+    }
+
+    void setId(int mId){
+        this.mId = mId;
+    }
+
+    void setTitle(String title){
+        this.mTitle = mTitle;
+    }
+
+    void setTime(String time){
+        this.mTime = mTime;
+    }
+
+    void setLink(String mLink){
+        this.mLink = mLink;
+    }
+
+    void setContent(String mContent){
+        this.mContent = mContent;
+    }
+
+    void setAuthorName(String mAuthorName){
+        this.mAuthorName = mAuthorName;
+    }
+
+    void setImageUrl(String mImageUrl){
+        this.mImageUrl = mImageUrl;
     }
 }
