@@ -50,11 +50,10 @@ public class HomeFragment extends Fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-
     @Override
     public Loader<List<Headline>> onCreateLoader(int id, Bundle args) {
-        Uri baseUri = Uri.parse(Const.HomeUrl);
-        return new HeadlineLoader(context, baseUri.toString());
+        Uri baseUri = Uri.parse(Const.HomeUrlXml);
+        return new HeadlineLoader(context, Const.HomeUrlXml);
     }
 
     @Override
@@ -78,7 +77,7 @@ public class HomeFragment extends Fragment
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        new HeadlineLoader(context,Const.HomeUrl);
+        new HeadlineLoader(context,Const.HomeUrlXml);
     }
 
     @Override

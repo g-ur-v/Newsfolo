@@ -4,7 +4,11 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
@@ -21,6 +25,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -50,7 +55,7 @@ public final class QueryUtils extends AppCompatActivity {
             Log.e(LOG_TAG, "Problem making the HTTP request.", e);
         }
 //        return extractFeatureFromJson(jsonResponse);
-        return extractFeatureFromXml(inputStream);
+        return extractFeatureFromXml(requestUrl);
     }
 
     public static URL createUrl(String stringUrl){
@@ -147,8 +152,8 @@ public final class QueryUtils extends AppCompatActivity {
         return headlines;
     }
 
-    private static List<Headline> extractFeatureFromXml(InputStream inputStream){
-        ArrayList<Headline> feeds = new ArrayList<>();
+    private static List<Headline> extractFeatureFromXml(String requestUrl){
+        List<Headline> feeds = new ArrayList<>();
         String tagname;
         XmlPullParserFactory factory = null;
         XmlPullParser parser = null;
@@ -160,7 +165,13 @@ public final class QueryUtils extends AppCompatActivity {
             //HttpGet method = new HttpGet(new URI(params[0]));
             //HttpResponse res = client.execute(method);
             //InputStream is = res.getEntity().getContent();
-            parser.setInput(new InputStreamReader(inputStream));
+
+            DefaultHttpClient client = new DefaultHttpClient();
+            HttpGet method = new HttpGet(new URI(Const.HomeUrlXml));
+            HttpResponse res = client.execute(method);
+            InputStream is = res.getEntity().getContent();
+
+            parser.setInput(new InputStreamReader(is));
             int eventType = parser.getEventType();
             Headline headline = new Headline();
             String text = "";
@@ -170,6 +181,7 @@ public final class QueryUtils extends AppCompatActivity {
                     case XmlPullParser.START_TAG:
                         if (tagname.equalsIgnoreCase("item")) {
                             headline = new Headline();
+                            Log.d("Headline","initialised");
                         }
                         break;
                     case XmlPullParser.TEXT:
@@ -193,6 +205,8 @@ public final class QueryUtils extends AppCompatActivity {
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
         return feeds;

@@ -42,13 +42,13 @@ public class EntertainmentFragment extends Fragment implements LoaderManager.Loa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        return inflater.inflate(R.layout.fragment_entertainment, container, false);
     }
 
 
     @Override
     public Loader<List<Headline>> onCreateLoader(int id, Bundle args) {
-        Uri baseUri = Uri.parse(Const.EntertainmentUrl);
+        Uri baseUri = Uri.parse(Const.EntertainmentUrlXml);
         return new HeadlineLoader(context, baseUri.toString());
     }
 
@@ -71,7 +71,7 @@ public class EntertainmentFragment extends Fragment implements LoaderManager.Loa
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        new HeadlineLoader(context,Const.EntertainmentUrl);
+        new HeadlineLoader(context,Const.EntertainmentUrlXml);
     }
 
     @Override

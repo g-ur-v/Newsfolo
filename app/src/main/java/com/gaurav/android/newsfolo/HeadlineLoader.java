@@ -2,6 +2,7 @@ package com.gaurav.android.newsfolo;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
+import android.util.Log;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ class HeadlineLoader extends AsyncTaskLoader<List<Headline>>{
     HeadlineLoader(Context context, String url){
         super(context);
         mUrl = url;
+        Log.d("URl",url);
     }
 
     @Override
