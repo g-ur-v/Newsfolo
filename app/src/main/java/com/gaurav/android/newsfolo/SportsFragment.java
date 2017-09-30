@@ -40,13 +40,13 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_sports, container, false);
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
 
     @Override
     public Loader<List<Headline>> onCreateLoader(int id, Bundle args) {
-        Uri baseUri = Uri.parse(Const.SportsUrl);
+        Uri baseUri = Uri.parse(Const.SportsUrlXml);
         Uri.Builder uriBuilder = baseUri.buildUpon();
         uriBuilder.appendQueryParameter("filter[category_name]","Sports");
         return new HeadlineLoader(context, baseUri.toString());
@@ -71,7 +71,7 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        new HeadlineLoader(context,Const.SportsUrl);
+        new HeadlineLoader(context,Const.SportsUrlXml);
     }
 
     @Override

@@ -167,7 +167,7 @@ public final class QueryUtils extends AppCompatActivity {
             //InputStream is = res.getEntity().getContent();
 
             DefaultHttpClient client = new DefaultHttpClient();
-            HttpGet method = new HttpGet(new URI(Const.HomeUrlXml));
+            HttpGet method = new HttpGet(new URI(requestUrl));
             HttpResponse res = client.execute(method);
             InputStream is = res.getEntity().getContent();
 

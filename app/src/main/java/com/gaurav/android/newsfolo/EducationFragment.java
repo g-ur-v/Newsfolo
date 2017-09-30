@@ -39,13 +39,13 @@ public class EducationFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_education, container, false);
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
 
     @Override
     public Loader<List<Headline>> onCreateLoader(int id, Bundle args) {
-        Uri baseUri = Uri.parse(Const.EducationUrl);
+        Uri baseUri = Uri.parse(Const.EducationUrlXml);
         return new HeadlineLoader(context, baseUri.toString());
     }
 
@@ -68,7 +68,7 @@ public class EducationFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        new HeadlineLoader(context,Const.EducationUrl);
+        new HeadlineLoader(context,Const.EducationUrlXml);
     }
 
     @Override

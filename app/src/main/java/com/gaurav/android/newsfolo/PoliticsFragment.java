@@ -40,13 +40,13 @@ public class PoliticsFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_politics, container, false);
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
 
     @Override
     public Loader<List<Headline>> onCreateLoader(int id, Bundle args) {
-        Uri baseUri = Uri.parse(Const.PoliticsUrl);
+        Uri baseUri = Uri.parse(Const.PoliticsUrlXml);
         return new HeadlineLoader(context, baseUri.toString());
     }
 
@@ -69,7 +69,7 @@ public class PoliticsFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        new HeadlineLoader(context, Const.PoliticsUrl);
+        new HeadlineLoader(context, Const.PoliticsUrlXml);
     }
 
     @Override
