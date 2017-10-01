@@ -111,15 +111,15 @@ public class DrawerActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_home) {
-            viewPager.setCurrentItem(0);
-        } else if (id == R.id.nav_entertainment) {
             viewPager.setCurrentItem(1);
-        } else if (id == R.id.nav_sports) {
+        } else if (id == R.id.nav_entertainment) {
             viewPager.setCurrentItem(2);
-        } else if (id == R.id.nav_education) {
+        } else if (id == R.id.nav_sports) {
             viewPager.setCurrentItem(3);
-        } else if (id == R.id.nav_politics) {
+        } else if (id == R.id.nav_education) {
             viewPager.setCurrentItem(4);
+        } else if (id == R.id.nav_politics) {
+            viewPager.setCurrentItem(5);
         }else{
             viewPager.setCurrentItem(0);
         }

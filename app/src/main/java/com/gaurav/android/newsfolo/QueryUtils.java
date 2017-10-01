@@ -181,7 +181,6 @@ public final class QueryUtils extends AppCompatActivity {
                     case XmlPullParser.START_TAG:
                         if (tagname.equalsIgnoreCase("item")) {
                             headline = new Headline();
-                            Log.d("Headline","initialised");
                         }
                         break;
                     case XmlPullParser.TEXT:
