@@ -3,6 +3,7 @@ package com.gaurav.android.newsfolo;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,6 +85,7 @@ class HomeHeadlineAdapter extends ArrayAdapter<Headline> {
             });
 
             String HeadlineTitle = currentHeadline.getTitle();
+            Log.d("Headlinetitle", HeadlineTitle);
             TextView HeadlineTitleView = (TextView) listItemView.findViewById(R.id.headline_title);
             HeadlineTitleView.setText(HeadlineTitle);
 

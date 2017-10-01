@@ -49,6 +49,7 @@ class HeadlineLoader extends AsyncTaskLoader<List<Headline>>{
         if (mUrl == null){
             return null;
         }
+        Log.d("REturned", "feeds");
         return QueryUtils.fetchHeadlines(mUrl, getContext());
     }
 

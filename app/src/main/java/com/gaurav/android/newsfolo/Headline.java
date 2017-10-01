@@ -57,12 +57,10 @@ class Headline implements Serializable{
         this.mId = mId;
     }
 
-    void setTitle(String title){
-        this.mTitle = mTitle;
-    }
+    void setTitle(String title){ this.mTitle = title;}
 
     void setTime(String time){
-        this.mTime = mTime;
+        this.mTime = time;
     }
 
     void setLink(String mLink){

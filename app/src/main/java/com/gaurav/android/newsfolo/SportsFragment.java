@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +47,7 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public Loader<List<Headline>> onCreateLoader(int id, Bundle args) {
+        Log.d("Sports","inOnCreateLoader");
         Uri baseUri = Uri.parse(Const.SportsUrlXml);
         Uri.Builder uriBuilder = baseUri.buildUpon();
         uriBuilder.appendQueryParameter("filter[category_name]","Sports");
@@ -54,12 +56,14 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<List<Headline>> loader, List<Headline> headlines) {
+        Log.d("Sports",headlines.toString());
         View loadingIndicator = getActivity().findViewById(R.id.loading_indicator);
         loadingIndicator.setVisibility(View.GONE);
         mEmptyStateTextView.setText(R.string.no_headlines);
         mAdapter.clear();
         if (headlines!= null && !headlines.isEmpty()){
             mAdapter.addAll(headlines);
+            Log.d("Sports", "added");
         }
     }
 
@@ -84,9 +88,12 @@ public class SportsFragment extends Fragment implements LoaderManager.LoaderCall
         super.onActivityCreated(savedInstanceState);
         context = getActivity();
         ListView headlineListView = (ListView) getActivity().findViewById(R.id.list);
-        headlineListView.setEmptyView(mEmptyStateTextView);
         mEmptyStateTextView = (TextView) getActivity().findViewById(R.id.empty_view);
+        headlineListView.setEmptyView(mEmptyStateTextView);
         mAdapter = new HomeHeadlineAdapter(context, new ArrayList<Headline>());
+
+        Log.d("Adapter ", mAdapter.toString());
+
         headlineListView.setAdapter(mAdapter);
         headlineListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override

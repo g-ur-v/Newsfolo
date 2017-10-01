@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,7 @@ public class EntertainmentFragment extends Fragment implements LoaderManager.Loa
 
     @Override
     public Loader<List<Headline>> onCreateLoader(int id, Bundle args) {
+        Log.d("in", "onCreateLoader");
         Uri baseUri = Uri.parse(Const.EntertainmentUrlXml);
         return new HeadlineLoader(context, baseUri.toString());
     }

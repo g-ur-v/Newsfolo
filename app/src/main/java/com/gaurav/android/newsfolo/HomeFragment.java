@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,13 +32,13 @@ import java.util.List;
 import static android.content.Context.CONNECTIVITY_SERVICE;
 
 public class HomeFragment extends Fragment
-        implements LoaderCallbacks<List<Headline>>{
+        implements LoaderCallbacks<List<Headline>> {
     private static final Integer LOADER_ID = 1;
 
     private HomeHeadlineAdapter mAdapter;
     private TextView mEmptyStateTextView;
 
-    private Context context ;
+    private Context context;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -52,8 +53,9 @@ public class HomeFragment extends Fragment
 
     @Override
     public Loader<List<Headline>> onCreateLoader(int id, Bundle args) {
+        Log.d("In", "onCreateLoader");
         Uri baseUri = Uri.parse(Const.HomeUrlXml);
-        return new HeadlineLoader(context, Const.HomeUrlXml);
+        return new HeadlineLoader(context, baseUri.toString());
     }
 
     @Override
@@ -62,7 +64,7 @@ public class HomeFragment extends Fragment
         loadingIndicator.setVisibility(View.GONE);
         mEmptyStateTextView.setText(R.string.no_headlines);
         mAdapter.clear();
-        if (headlines!= null && !headlines.isEmpty()){
+        if (headlines != null && !headlines.isEmpty()) {
             mAdapter.addAll(headlines);
         }
     }
@@ -70,6 +72,7 @@ public class HomeFragment extends Fragment
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<List<Headline>> loader) {
         mAdapter.clear();
+        Log.d("In","loaderReset");
         android.support.v4.app.LoaderManager loaderManager = getLoaderManager();
         loaderManager.initLoader(LOADER_ID, null, this);
     }
@@ -77,17 +80,18 @@ public class HomeFragment extends Fragment
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        new HeadlineLoader(context,Const.HomeUrlXml);
+        new HeadlineLoader(context, Const.HomeUrlXml);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
+        @Override
+        public void onDetach () {
+            super.onDetach();
+        }
+
+        @Override
+        public void onActivityCreated (@Nullable Bundle savedInstanceState){
+            super.onActivityCreated(savedInstanceState);
+
+        }
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-    }
-}

@@ -181,7 +181,6 @@ public final class QueryUtils extends AppCompatActivity {
                     case XmlPullParser.START_TAG:
                         if (tagname.equalsIgnoreCase("item")) {
                             headline = new Headline();
-                            Log.d("Headline","initialised");
                         }
                         break;
                     case XmlPullParser.TEXT:
@@ -190,12 +189,16 @@ public final class QueryUtils extends AppCompatActivity {
                     case XmlPullParser.END_TAG:
                         if (tagname.equalsIgnoreCase("item")) {
                             feeds.add(headline);
-                        }else if (tagname.equalsIgnoreCase("title")){
+                        } else if (tagname.equalsIgnoreCase("title")) {
                             headline.setTitle(text);
-                        }else if (tagname.equalsIgnoreCase("link")) {
+                        } else if (tagname.equalsIgnoreCase("link")) {
                             headline.setLink(text);
-                        }else if(tagname.equalsIgnoreCase("thumbnail")){
-                            headline.setImageUrl(parser.getAttributeValue(null,"url"));
+                        } else if (tagname.equalsIgnoreCase("thumbnail")) {
+                            headline.setImageUrl(parser.getAttributeValue(null, "url"));
+                        } else if (tagname.equalsIgnoreCase("dc:creator")) {
+                            headline.setAuthorName(text);
+                        } else if (tagname.equalsIgnoreCase("pubDate")){
+                            headline.setTime(text);
                         }
                     default:
                         break;
@@ -209,6 +212,7 @@ public final class QueryUtils extends AppCompatActivity {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        Log.d("TAG",feeds.toString());
         return feeds;
     }
 

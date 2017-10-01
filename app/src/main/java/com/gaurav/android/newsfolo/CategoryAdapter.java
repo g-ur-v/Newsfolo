@@ -15,6 +15,8 @@ public class CategoryAdapter extends FragmentPagerAdapter {
         super(fm);
         mContext = context;
     }
+
+    @Override
     public Fragment getItem(int position){
         switch (position){
             case 0: return new HomeFragment();
