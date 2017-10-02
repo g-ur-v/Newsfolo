@@ -11,6 +11,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -161,10 +165,6 @@ public final class QueryUtils extends AppCompatActivity {
             factory = XmlPullParserFactory.newInstance();
             factory.setNamespaceAware(true);
             parser = factory.newPullParser();
-            //DefaultHttpClient client = new DefaultHttpClient();
-            //HttpGet method = new HttpGet(new URI(params[0]));
-            //HttpResponse res = client.execute(method);
-            //InputStream is = res.getEntity().getContent();
 
             DefaultHttpClient client = new DefaultHttpClient();
             HttpGet method = new HttpGet(new URI(requestUrl));
@@ -193,12 +193,24 @@ public final class QueryUtils extends AppCompatActivity {
                             headline.setTitle(text);
                         } else if (tagname.equalsIgnoreCase("link")) {
                             headline.setLink(text);
-                        } else if (tagname.equalsIgnoreCase("thumbnail")) {
-                            headline.setImageUrl(parser.getAttributeValue(null, "url"));
-                        } else if (tagname.equalsIgnoreCase("dc:creator")) {
-                            headline.setAuthorName(text);
                         } else if (tagname.equalsIgnoreCase("pubDate")){
                             headline.setTime(text);
+                        } else if (tagname.equalsIgnoreCase("description")){
+
+                            Document doc = Jsoup.parse(text);
+                            Elements links = doc.select("img[src]"); // img with src
+
+                            for (Element link: links){
+                                //Log.i("........",""+link.attr("abs:src"));
+                                headline.setImageUrl(link.attr("abs:src"));
+                            }
+
+                        } else if (tagname.equalsIgnoreCase("creator")){
+                            Document doc = Jsoup.parse(text);
+                            Elements links = doc.select("body");
+                            for(Element link: links){
+                                headline.setAuthorName(link.ownText());
+                            }
                         }
                     default:
                         break;

@@ -85,7 +85,6 @@ class HomeHeadlineAdapter extends ArrayAdapter<Headline> {
             });
 
             String HeadlineTitle = currentHeadline.getTitle();
-            Log.d("Headlinetitle", HeadlineTitle);
             TextView HeadlineTitleView = (TextView) listItemView.findViewById(R.id.headline_title);
             HeadlineTitleView.setText(HeadlineTitle);
 
